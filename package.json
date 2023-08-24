@@ -1,0 +1,16 @@
+{
+  "name": "wallet-auth",
+  "version": "0.0.1",
+  "description": "A Web3 wallet connector that supports multiple chains",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "klntsky",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.5.1",
+    "typescript": "^5.1.6",
+    "typescript-language-server": "^3.3.2"
+  }
+}
