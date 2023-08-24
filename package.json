@@ -12,5 +12,8 @@
     "@types/node": "^20.5.1",
     "typescript": "^5.1.6",
     "typescript-language-server": "^3.3.2"
+  },
+  "dependencies": {
+    "@metamask/providers": "^11.1.1"
   }
 }
