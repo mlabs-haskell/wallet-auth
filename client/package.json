@@ -1,7 +1,7 @@
 {
-  "name": "wallet-auth",
+  "name": "wallet-auth-client",
   "version": "0.0.1",
-  "description": "A Web3 wallet connector that supports multiple chains",
+  "description": "A Web3 wallet connector that supports multiple chains (Metamask, CIP-30 (Cardano), and Keplr (Cosmos))",
   "main": "src/index.ts",
   "type": "module",
   "scripts": {
