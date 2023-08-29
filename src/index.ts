@@ -1,5 +1,6 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { toHexString } from './utils';
+import { Address, SignedData, SignatureMethod } from './types';
 import { Window as KeplrWindow } from "@keplr-wallet/types";
 
 declare global {
@@ -11,21 +12,6 @@ declare const window: Window &
    typeof globalThis & {
      ethereum: MetaMaskInpageProvider | undefined
    }
-
-type Address = string;
-
-export type SignedData = {
-    signature: string,
-    address: Address,
-    data: string,
-    method: SignatureMethod
-};
-
-export enum SignatureMethod {
-    Cip30 = 'Cip30',
-    Metamask = 'Metamask',
-    Keplr = 'Keplr',
-};
 
 export interface AvailableWallet<T> {
     connect(): Promise<T>;
