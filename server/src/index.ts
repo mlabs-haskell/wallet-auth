@@ -2,12 +2,22 @@ import { SignedData, SignatureMethod } from 'wallet-auth-client';
 import verifyDataSignature from '@cardano-foundation/cardano-verify-datasignature';
 import { utils } from 'ethers';
 import { verifyADR36Amino } from '@keplr-wallet/cosmos'
+import { decodeAddress } from './cardano';
 
 export function validate(signedData: SignedData): boolean {
     switch (signedData.method) {
         case SignatureMethod.Cip30: {
             const [key, signature] = signedData.signature.split(':');
-            return verifyDataSignature(signature, key, signedData.data);
+
+            const address = decodeAddress(
+                Buffer.from(signedData.address, 'hex')
+            );
+
+            if (!signedData.data.startsWith(signedData.address + '\n')) {
+                return false;
+            }
+
+            return verifyDataSignature(signature, key, signedData.data, address);
         }
 
         case SignatureMethod.Metamask: {
@@ -29,7 +39,7 @@ export function validate(signedData: SignedData): boolean {
 
         case SignatureMethod.Keplr: {
             const bech32Prefix = "cosmos";
-            const [pubKeyType, pubKeyBase64, signatureBase64] =
+            const [_pubKeyType, pubKeyBase64, signatureBase64] =
                 signedData.signature.split(':');
             const pubKey = new Uint8Array(
                 Buffer.from(pubKeyBase64, 'base64')
@@ -37,6 +47,9 @@ export function validate(signedData: SignedData): boolean {
             const signature = new Uint8Array(
                 Buffer.from(signatureBase64, 'base64')
             );
+            if (!signedData.data.startsWith(signedData.address + '\n')) {
+                return false;
+            }
             return verifyADR36Amino(
                 bech32Prefix,
                 signedData.address,
