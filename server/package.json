@@ -17,7 +17,6 @@
     "@babel/plugin-transform-typescript": "^7.22.11",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-typescript": "^7.22.11",
-    "@types/mocha": "^10.0.1",
     "@types/node": "^20.5.1",
     "babel-cli": "^6.26.0",
     "babel-jest": "^29.6.4",
@@ -32,7 +31,6 @@
     "@cardano-foundation/cardano-verify-datasignature": "^1.0.11",
     "@emurgo/cardano-message-signing-nodejs": "^1.0.1",
     "@keplr-wallet/cosmos": "^0.12.21",
-    "ethers": "^5.7.2",
-    "mocha": "^10.2.0"
+    "ethers": "^5.7.2"
   }
 }
