@@ -12,7 +12,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
     setTimeout(async () => {
+
         const av = new AvailableCip30('nami');
+        // pass `true` as the second argument to force using
+        // reward address:
+        // const av = new AvailableCip30('nami', true);
         console.log(av);
         const connected = await av.connect();
         console.log(connected);

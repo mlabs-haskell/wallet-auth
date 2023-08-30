@@ -52,14 +52,20 @@ extends (
 implements ConnectedWallet {
     private cip30: any;
     private name: string;
-    constructor (cip30: any, name: string) {
+    public useRewardAddress: boolean;
+    constructor (cip30: any, name: string, useRewardAddress: boolean) {
         super();
         this.cip30 = cip30;
         this.name = name;
+        this.useRewardAddress = useRewardAddress;
     }
 
     async getAddresses() {
-        return await this.cip30.getRewardAddresses();
+        return await (
+            this.useRewardAddress ?
+                this.cip30.getRewardAddresses() :
+                this.cip30.getUsedAddresses()
+        );
     }
 
     async signData(data) {
@@ -69,8 +75,12 @@ implements ConnectedWallet {
         }
 
         const address = addresses[0];
+
         data = address + '\n' + data;
-        const result = await this.cip30.signData(address, toHexString(new TextEncoder().encode(data)));
+
+        const result = await this.cip30.signData(
+            address,
+            toHexString(new TextEncoder().encode(data)));
 
         return {
             signature: result.key + ':' + result.signature,
@@ -83,19 +93,22 @@ implements ConnectedWallet {
 
 export class AvailableCip30 implements AvailableWallet<ConnectedCip30> {
     public tag: string;
-    constructor (tag: Cip30WalletTag) {
+    public useRewardAddress: boolean;
+    constructor (tag: Cip30WalletTag, useRewardAddress?: boolean) {
+        this.useRewardAddress = useRewardAddress || false;
+
         if (typeof (window as any).cardano === 'object' &&
             typeof (window as any).cardano[tag] === 'object' &&
             typeof (window as any).cardano[tag].enable === 'function') {
             this.tag = tag;
         } else {
-            const obj: any = {};
-            console.error("Wallet error", obj);
             setTimeout(() => {
-                if (typeof (window as any).cardano[tag]?.enable === 'function') {
-                    obj.message= (
+                if (typeof (window as any).cardano === 'object' &&
+                    typeof (window as any).cardano[tag] === 'object' &&
+                    typeof (window as any).cardano[tag].enable === 'function') {
+                    console.error(
                         "Wallet " + tag +
-                            " was not yet initialized at call time, but is " +
+                            " has not yet been initialized at call time, but is " +
                             "available now. Consider initializing with a " +
                             "delay for the extension to have time to inject" +
                             " the API entry point into the browser window."
@@ -110,7 +123,7 @@ export class AvailableCip30 implements AvailableWallet<ConnectedCip30> {
         // We assume that once available API can't disappear from `window`.
         // Is it true?
         const cip30 = await (window as any).cardano[this.tag].enable();
-        return new ConnectedCip30(cip30, this.tag);
+        return new ConnectedCip30(cip30, this.tag, this.useRewardAddress);
     }
 }
 
