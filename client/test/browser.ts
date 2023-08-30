@@ -1,3 +1,4 @@
+// this webpage attempts to trigger 3 signature popups for each wallet
 import { AvailableMetamask, AvailableCip30, AvailableKeplr } from '../src/index';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -28,6 +29,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(connected);
         const sig = await connected.signData('hiii!');
         console.log(sig);
-
     }, 1000);
 });

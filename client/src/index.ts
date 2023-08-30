@@ -1,6 +1,7 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { toHexString } from './utils';
 import { Address, SignedData, SignatureMethod } from './types';
+export { Address, SignedData, SignatureMethod } from './types';
 import { Window as KeplrWindow } from "@keplr-wallet/types";
 
 declare global {
@@ -58,7 +59,7 @@ implements ConnectedWallet {
     }
 
     async getAddresses() {
-        return await this.cip30.getUsedAddresses();
+        return await this.cip30.getRewardAddresses();
     }
 
     async signData(data) {
@@ -68,10 +69,11 @@ implements ConnectedWallet {
         }
 
         const address = addresses[0];
+        data = address + '\n' + data;
         const result = await this.cip30.signData(address, toHexString(new TextEncoder().encode(data)));
 
         return {
-            signature: toHexString(result.signature),
+            signature: result.key + ':' + result.signature,
             address: address,
             data,
             method: SignatureMethod.Cip30
@@ -142,10 +144,10 @@ implements ConnectedWallet {
             throw "No addresses found!";
         }
         const address = addresses[0];
-        console.log(addresses);
+        data = address + '\n' + data;
         const signature = await this.provider.request({method: 'personal_sign', params: [data, address]});
         return {
-            signature: signature as unknown as string, // TODO
+            signature: signature as unknown as string,
             address,
             data,
             method: SignatureMethod.Metamask
@@ -217,9 +219,12 @@ export class ConnectedKeplr implements ConnectedWallet {
 
     async signData(data: string) {
         const address = (await this.getAddresses())[0];
+        data = address + '\n' + data;
         const response = await window.keplr.signArbitrary(this.chainId, address, data);
         return {
-            signature: response.signature,
+            signature: response.pub_key.type + ':' +
+                response.pub_key.value + ':' +
+                response.signature,
             address,
             data,
             method: SignatureMethod.Keplr
