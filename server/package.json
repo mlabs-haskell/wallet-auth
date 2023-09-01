@@ -2,10 +2,10 @@
   "name": "wallet-auth-server",
   "version": "0.0.1",
   "description": "A server-side validator for wallet-auth-client",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
   "type": "module",
   "scripts": {
-    "build": "babel src --out-dir dist",
+    "build": "tsc",
     "test": "jest"
   },
   "author": "klntsky",
