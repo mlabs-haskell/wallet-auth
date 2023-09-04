@@ -32,6 +32,8 @@
     "@emurgo/cardano-message-signing-nodejs": "^1.0.1",
     "@keplr-wallet/cosmos": "^0.12.21",
     "bech32": "^2.0.0",
-    "ethers": "^5.7.2"
+    "bs58": "^5.0.0",
+    "ethers": "^5.7.2",
+    "tweetnacl": "^1.0.3"
   }
 }

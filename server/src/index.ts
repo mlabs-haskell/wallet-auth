@@ -3,6 +3,8 @@ import verifyDataSignature from '@cardano-foundation/cardano-verify-datasignatur
 import { utils } from 'ethers';
 import { verifyADR36Amino } from '@keplr-wallet/cosmos'
 import { decodeAddress } from './cardano';
+import * as nacl from "tweetnacl";
+import * as base58 from "bs58";
 
 export function validate(signedData: SignedData): boolean {
     switch (signedData.method) {
@@ -57,6 +59,20 @@ export function validate(signedData: SignedData): boolean {
                 pubKey,
                 signature
             );
+        }
+
+        case SignatureMethod.Phantom: {
+            const signature = new Uint8Array(
+                Buffer.from(signedData.signature, 'hex'));
+            const publicKey = base58.decode(signedData.address);
+            console.log(
+                utils.toUtf8Bytes(signedData.data),
+                signature,
+                publicKey)
+            return nacl.sign.detached.verify(
+                utils.toUtf8Bytes(signedData.data),
+                signature,
+                publicKey)
         }
     }
     return false;

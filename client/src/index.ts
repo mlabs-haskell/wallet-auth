@@ -27,34 +27,14 @@ interface StateEventMap {
   'addressChanged': CustomEvent<{address: Address}>;
 }
 
-interface StateEventTarget extends EventTarget {
-  addEventListener<K extends keyof StateEventMap>(
-    type: K,
-    listener: (ev: StateEventMap[K]) => void,
-    options?: boolean | AddEventListenerOptions
-  ): void;
-  addEventListener(
-    type: string,
-    callback: EventListenerOrEventListenerObject | null,
-    options?: EventListenerOptions | boolean
-  ): void;
-}
-
 type Cip30WalletTag = string;
 
 export class ConnectedCip30
-extends (
-    EventTarget as {
-        new(): StateEventTarget;
-        prototype: StateEventTarget
-    }
-)
 implements ConnectedWallet {
     private cip30: any;
     private name: string;
     public useRewardAddress: boolean;
     constructor (cip30: any, name: string, useRewardAddress: boolean) {
-        super();
         this.cip30 = cip30;
         this.name = name;
         this.useRewardAddress = useRewardAddress;
@@ -128,16 +108,9 @@ export class AvailableCip30 implements AvailableWallet<ConnectedCip30> {
 }
 
 export class ConnectedMetamask
-extends (
-    EventTarget as {
-        new(): StateEventTarget;
-        prototype: StateEventTarget
-    }
-)
 implements ConnectedWallet {
     private provider: MetaMaskInpageProvider;
     constructor (provider: MetaMaskInpageProvider) {
-        super();
         this.provider = provider;
     }
 
@@ -226,7 +199,6 @@ export class ConnectedKeplr implements ConnectedWallet {
 
     async getAddresses() {
         const { bech32Address } = await window.keplr.getKey(this.chainId);
-        console.log(bech32Address);
         return [bech32Address];
     }
 
@@ -241,6 +213,54 @@ export class ConnectedKeplr implements ConnectedWallet {
             address,
             data,
             method: SignatureMethod.Keplr
+        };
+    }
+}
+
+export class AvailablePhantom implements AvailableWallet<ConnectedPhantom> {
+    private provider: any;
+    constructor() {
+
+        const isPhantomInstalled: boolean = (
+            // @ts-ignore
+            !!window.phantom?.solana?.isPhantom
+        );
+        if (!isPhantomInstalled) {
+            throw "Phantom wallet is not available!";
+        }
+
+        // @ts-ignore
+        this.provider = window.phantom.solana;
+    }
+
+    async connect() {
+        // can throw
+        const resp = await this.provider.request({ method: "connect" });
+        return new ConnectedPhantom(this.provider);
+    }
+}
+
+export class ConnectedPhantom implements ConnectedWallet {
+    private provider: any;
+
+    constructor (provider: any) {
+        this.provider = provider;
+    }
+
+    async getAddresses() {
+        return [ this.provider.publicKey.toString() ];
+    }
+
+    async signData(data: string) {
+        const encodedMessage = new TextEncoder().encode(data);
+        const response = await this.provider.signMessage(encodedMessage, "utf8");
+        // public key is address in Phantom, so there is no need to include
+        // address in the message
+        return {
+            signature: toHexString(response.signature),
+            address: response.publicKey.toString(),
+            data,
+            method: SignatureMethod.Phantom
         };
     }
 }
