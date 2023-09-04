@@ -124,20 +124,28 @@ describe('Keplr', () => {
 
 describe('Phantom', () => {
     test('validate works for a fixture', () => {
+        expect(validate({
+            "signature": "785baead02b74c34df8320058be428ea82fdb29c271e55b5bfbc7fbdfeecb8fa37ebd3c10cf805c2e96ef2c65fc9d0060c82091fffefed2ee773d65270c98904",
+            "address": "3SoP3sycHnJnhG6J4p32qNs6KYQ5Gzitfc1hBun7JTav",
+            "data": "3SoP3sycHnJnhG6J4p32qNs6KYQ5Gzitfc1hBun7JTav\nhiii!",
+            "method": "Phantom"
+        })).toBe(true);
+    });
+    test('validate fails for a bad fixture', () => {
+        expect(validate({
+            "signature": "785baead02b74c34df8320058be428ea82fdb29c271e55b5bfbc7fbdfeecb8fa37ebd3c10cf805c2e96ef2c65fc9d0060c82091fffefed2ee773d65270c98904",
+            "address": "3SoP3sycHnJnhG6J4p32qNs6KYQ5Gzitfc1hBun7JTav",
+            "data": "3SoP3sycHnJnhG6J4p32qNs6KYQ5Gzitfc1hBun7JTav\nhiii!~",
+            "method": "Phantom"
+        })).toBe(false);
+    });
+
+    test('validate fails for a fixture without address', () => {
         expect(
             validate({
                 "signature": "a83007d668183a66419c0d8f73112acc61fbacac1cd29eb1872e1fba5fbf7e0c0326930bcb23e9c840225e57cb59d75d8a1f363391c82ff21dbd09bee1282704",
                 "address": "3SoP3sycHnJnhG6J4p32qNs6KYQ5Gzitfc1hBun7JTav",
                 "data": "hiii!",
-                "method": "Phantom"
-            })).toBe(true);
-    });
-    test('validate fails for a bad fixture', () => {
-        expect(
-            validate({
-                "signature": "a83007d668183a66419c0d8f73112acc61fbacac1cd29eb1872e1fba5fbf7e0c0326930bcb23e9c840225e57cb59d75d8a1f363391c82ff21dbd09bee1282704",
-                "address": "3SoP3sycHnJnhG6J4p32qNs6KYQ5Gzitfc1hBun7JTav",
-                "data": "hiii!~~~",
                 "method": "Phantom"
             })).toBe(false);
     });

@@ -252,6 +252,7 @@ export class ConnectedPhantom implements ConnectedWallet {
     }
 
     async signData(data: string) {
+        data = (await this.getAddresses())[0] + '\n' + data;
         const encodedMessage = new TextEncoder().encode(data);
         const response = await this.provider.signMessage(encodedMessage, "utf8");
         // public key is address in Phantom, so there is no need to include

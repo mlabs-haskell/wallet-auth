@@ -62,13 +62,13 @@ export function validate(signedData: SignedData): boolean {
         }
 
         case SignatureMethod.Phantom: {
+            if (!signedData.data.startsWith(signedData.address + '\n')) {
+                return false;
+            }
+
             const signature = new Uint8Array(
                 Buffer.from(signedData.signature, 'hex'));
             const publicKey = base58.decode(signedData.address);
-            console.log(
-                utils.toUtf8Bytes(signedData.data),
-                signature,
-                publicKey)
             return nacl.sign.detached.verify(
                 utils.toUtf8Bytes(signedData.data),
                 signature,
