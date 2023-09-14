@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "skipLibCheck": true,
-    "module": "es2022",
-    "esModuleInterop": true,
     "target": "es2022",
+    "module": "CommonJS",
     "moduleResolution": "node",
+    "esModuleInterop": true,
+    "outDir": "dist",
     "sourceMap": true,
-    "outDir": "dist"
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "strict": true,
   },
     "lib": ["es2016", "dom"],
 "include": [

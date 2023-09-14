@@ -1,9 +1,8 @@
 {
-  "name": "wallet-auth-server",
+  "name": "wallet-auth-server6",
   "version": "0.0.1",
   "description": "A server-side validator for wallet-auth-client",
   "main": "dist/src/index.js",
-  "type": "module",
   "scripts": {
     "build": "tsc",
     "test": "jest"
