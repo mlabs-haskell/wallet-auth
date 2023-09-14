@@ -5,6 +5,7 @@ Implements sign-in-with-wallet authorization flow for 3 kinds of wallets:
 - Metamask
 - CIP-30 (Cardano)
 - Keplr (Cosmos)
+- Phantom (Solana)
 
 Consists of two parts:
 
