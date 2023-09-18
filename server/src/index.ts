@@ -1,4 +1,4 @@
-import { SignedData, SignatureMethod } from './types';
+import { SignedData, SignatureMethod } from 'wallet-auth-client';
 import verifyDataSignature from '@cardano-foundation/cardano-verify-datasignature';
 import { utils } from 'ethers';
 import { verifyADR36Amino } from '@keplr-wallet/cosmos'

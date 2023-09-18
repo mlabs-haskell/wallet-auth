@@ -1,6 +1,6 @@
 {
   "name": "wallet-auth-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Web3 wallet connector that supports signing with multiple wallets/chains (Metamask, CIP-30 (Cardano), Keplr (Cosmos) and Phantom (Solana)",
   "main": "dist/src/index.js",
   "type": "module",
