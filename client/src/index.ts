@@ -1,7 +1,7 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import { toHexString } from './utils';
-import { Address, SignedData, SignatureMethod } from './types';
-export { Address, SignedData, SignatureMethod } from './types';
+import { toHexString } from './utils.js';
+import { Address, SignedData, SignatureMethod } from './types.js';
+export { Address, SignedData, SignatureMethod } from './types.js';
 import { Window as KeplrWindow } from "@keplr-wallet/types";
 
 declare global {

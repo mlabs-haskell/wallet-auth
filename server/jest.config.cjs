@@ -1,7 +1,10 @@
 module.exports = {
+  transformIgnorePatterns: ['node_modules/(?!(wallet-auth-client)/)'],
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx|mjs)$': 'babel-jest',
+  },
   testEnvironment: 'node',
-    testPathIgnorePatterns: [".d.ts", ".js"],
-testMatch: [
-    '**/test/**/*.(ts|js)'
+  testMatch: [
+    '**/dist/test/**/*.(js)'
   ],
 };
