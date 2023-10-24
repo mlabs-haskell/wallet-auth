@@ -1,6 +1,5 @@
-import assert from 'assert';
 import {describe, expect, test} from '@jest/globals';
-import { validate } from '../src/index';
+import { validate } from '../src/index.js';
 
 describe('CIP-30', () => {
     test('validate works for a fixture (base address, mainnet)', () => {

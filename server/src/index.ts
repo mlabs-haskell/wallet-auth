@@ -2,7 +2,7 @@ import { SignedData, SignatureMethod } from 'wallet-auth-client';
 import verifyDataSignature from '@cardano-foundation/cardano-verify-datasignature';
 import { utils } from 'ethers';
 import { verifyADR36Amino } from '@keplr-wallet/cosmos'
-import { decodeAddress } from './cardano';
+import { decodeAddress } from './cardano.js';
 import * as nacl from "tweetnacl";
 import * as base58 from "bs58";
 

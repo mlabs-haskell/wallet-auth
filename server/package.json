@@ -1,6 +1,6 @@
 {
   "name": "wallet-auth-server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A server-side validator for wallet-auth-client",
   "main": "dist/src/index.js",
   "type": "module",
@@ -34,6 +34,7 @@
     "bech32": "^2.0.0",
     "bs58": "^5.0.0",
     "ethers": "^5.7.2",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "wallet-auth-client": "../client"
   }
 }
