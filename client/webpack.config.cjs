@@ -35,6 +35,9 @@ module.exports = {
     },
 
     resolve: {
-        extensions: ['.js', '.ts']
+        extensionAlias: {
+            ".js": [".ts", ".js"],
+            ".mjs": [".mts", ".mjs"]
+        }
     }
 };
