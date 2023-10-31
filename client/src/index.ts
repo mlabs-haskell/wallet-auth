@@ -49,7 +49,12 @@ implements ConnectedWallet {
     }
 
     async signData(data) {
-        const addresses = await this.getAddresses();
+        var addresses = await this.getAddresses();
+
+        if (addresses.length == 0) {
+            addresses = await this.cip30.getUnusedAddresses();
+        }
+
         if (addresses.length == 0) {
             throw "No addresses available!";
         }

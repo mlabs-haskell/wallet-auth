@@ -1,5 +1,5 @@
 // this webpage attempts to trigger 3 signature popups for each wallet
-import { AvailableMetamask, AvailableCip30, AvailableKeplr, AvailablePhantom } from '../src/index';
+import { AvailableMetamask, AvailableCip30, AvailableKeplr, AvailablePhantom } from '../src/index.js';
 
 const textarea = document.createElement('textarea');
 
@@ -26,6 +26,36 @@ document.body.appendChild(document.createElement('br'));
 
 mkTest('CIP-30 nami', async () => {
     const av = new AvailableCip30('nami');
+    // pass `true` as the second argument to force using
+    // reward address:
+    // const av = new AvailableCip30('nami', true);
+    console.log('AvailableCip30', av);
+    const connected = await av.connect();
+    console.log('ConnectedCip30', connected, await connected.getAddresses());
+    const signature = await connected.signData('hiii!');
+    console.log('CIP-30 signature', signature);
+    return signature;
+});
+
+document.body.appendChild(document.createElement('br'));
+
+mkTest('CIP-30 typhon', async () => {
+    const av = new AvailableCip30('typhoncip30');
+    // pass `true` as the second argument to force using
+    // reward address:
+    // const av = new AvailableCip30('nami', true);
+    console.log('AvailableCip30', av);
+    const connected = await av.connect();
+    console.log('ConnectedCip30', connected, await connected.getAddresses());
+    const signature = await connected.signData('hiii!');
+    console.log('CIP-30 signature', signature);
+    return signature;
+});
+
+document.body.appendChild(document.createElement('br'));
+
+mkTest('CIP-30 yoroi', async () => {
+    const av = new AvailableCip30('yoroi');
     // pass `true` as the second argument to force using
     // reward address:
     // const av = new AvailableCip30('nami', true);
