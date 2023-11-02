@@ -2,7 +2,6 @@ import { SignedData, SignatureMethod } from 'wallet-auth-client';
 import verifyDataSignature from '@cardano-foundation/cardano-verify-datasignature';
 import { utils } from 'ethers';
 import { verifyADR36Amino } from '@keplr-wallet/cosmos'
-import { decodeAddress } from './cardano.js';
 import * as nacl from "tweetnacl";
 import * as base58 from "bs58";
 
@@ -11,15 +10,11 @@ export function validate(signedData: SignedData): boolean {
         case SignatureMethod.Cip30: {
             const [key, signature] = signedData.signature.split(':');
 
-            const address = decodeAddress(
-                Buffer.from(signedData.address, 'hex')
-            );
-
             if (!signedData.data.startsWith(signedData.address + '\n')) {
                 return false;
             }
 
-            return verifyDataSignature(signature, key, signedData.data, address);
+            return verifyDataSignature(signature, key, signedData.data, signedData.address);
         }
 
         case SignatureMethod.Metamask: {

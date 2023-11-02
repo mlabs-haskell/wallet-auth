@@ -13,7 +13,7 @@ export function decodeAddress(address: Uint8Array): string {
     const header = (address[0] & 0b11110000) >> 4;
 
     switch (header) {
-        case 0b0111:
+        case 0b1110:
             // reward, kh
             prefix = "stake";
             break;
