@@ -24,8 +24,23 @@ mkTest('Metamask', async () => {
 
 document.body.appendChild(document.createElement('br'));
 
-mkTest('CIP-30 nami', async () => {
+mkTest('CIP-30 nami, base address', async () => {
     const av = new AvailableCip30('nami');
+    // pass `true` as the second argument to force using
+    // reward address:
+    // const av = new AvailableCip30('nami', true);
+    console.log('AvailableCip30', av);
+    const connected = await av.connect();
+    console.log('ConnectedCip30', connected, await connected.getAddresses());
+    const signature = await connected.signData('hiii!');
+    console.log('CIP-30 signature', signature);
+    return signature;
+});
+
+document.body.appendChild(document.createElement('br'));
+
+mkTest('CIP-30 nami, reward address', async () => {
+    const av = new AvailableCip30('nami', true);
     // pass `true` as the second argument to force using
     // reward address:
     // const av = new AvailableCip30('nami', true);

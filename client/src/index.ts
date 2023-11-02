@@ -1,8 +1,9 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import { toHexString } from './utils.js';
 import { Address, SignedData, SignatureMethod } from './types.js';
 export { Address, SignedData, SignatureMethod } from './types.js';
 import { Window as KeplrWindow } from "@keplr-wallet/types";
+import { toHexString, hexToBytes } from './utils.js';
+import { decodeAddress } from './cardano.js';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -40,28 +41,35 @@ implements ConnectedWallet {
         this.useRewardAddress = useRewardAddress;
     }
 
+    async getHexAddresses() {
+        let paymentAddresses = async () => {
+            let used = await this.cip30.getUsedAddresses();
+            return (used.length != 0) ? used :
+                (await this.cip30.getUnusedAddresses())
+            }
+        let addrs = this.useRewardAddress ?
+                        await (this.cip30.getRewardAddresses()) :
+                        await paymentAddresses();
+        return addrs;
+    }
+
     async getAddresses() {
-        return await (
-            this.useRewardAddress ?
-                this.cip30.getRewardAddresses() :
-                this.cip30.getUsedAddresses()
-        );
+        const hexAddrs = await this.getHexAddresses();
+        let decodeFromHex = (hex) => {return  decodeAddress(hexToBytes(hex))}
+        return hexAddrs.map(decodeFromHex);
     }
 
     async signData(data) {
-        var addresses = await this.getAddresses();
-
-        if (addresses.length == 0) {
-            addresses = await this.cip30.getUnusedAddresses();
-        }
+        var addresses = await this.getHexAddresses();
 
         if (addresses.length == 0) {
             throw "No addresses available!";
         }
 
         const address = addresses[0];
+        const bechAddress = decodeAddress(hexToBytes(address));
 
-        data = address + '\n' + data;
+        data = bechAddress + '\n' + data;
 
         const result = await this.cip30.signData(
             address,
@@ -69,7 +77,7 @@ implements ConnectedWallet {
 
         return {
             signature: result.key + ':' + result.signature,
-            address: address,
+            address: bechAddress,
             data,
             method: SignatureMethod.Cip30
         };
