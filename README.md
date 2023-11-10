@@ -29,7 +29,7 @@ You have to have wallets of your choice installed in your browser.
 cd client
 npm install
 npm run pack
-miniserve . & xdg-open http://localhost:8080/index.html
+sleep1; xdg-open http://localhost:8080/index.html & miniserve .
 ```
 
 There are some tests in `server` to ensure `SignedData` objects can be properly validated or rejected:
