@@ -74,14 +74,27 @@ async function cip30handler(av: AvailableCip30) {
 
 for (const key in cip30knownWallets) {
     const value = cip30knownWallets[key];
-    mkTest(key +', base address', async () => {
+
+    mkTest(key +', base address, mainnet', async () => {
         const av = new AvailableCip30(value);
         return cip30handler(av);
     });
     document.body.appendChild(document.createElement('br'));
 
-    mkTest(key +', stake address', async () => {
+    mkTest(key +', stake address, mainnet', async () => {
         const av = new AvailableCip30(value, true);
+        return cip30handler(av);
+    });
+    document.body.appendChild(document.createElement('br'));
+
+    mkTest(key +', base address, testnet', async () => {
+        const av = new AvailableCip30(value, false, true);
+        return cip30handler(av);
+    });
+    document.body.appendChild(document.createElement('br'));
+
+    mkTest(key +', stake address, testnet', async () => {
+        const av = new AvailableCip30(value, true, true);
         return cip30handler(av);
     });
     document.body.appendChild(document.createElement('br'));

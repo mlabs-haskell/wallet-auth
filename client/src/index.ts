@@ -3,7 +3,7 @@ import { Address, SignedData, SignatureMethod } from './types.js';
 export { Address, SignedData, SignatureMethod } from './types.js';
 import { Window as KeplrWindow } from "@keplr-wallet/types";
 import { toHexString, hexToBytes } from './utils.js';
-import { decodeAddress } from './cardano.js';
+import { decodeAddress, isMainnet } from './cardano.js';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -35,10 +35,12 @@ implements ConnectedWallet {
     private cip30: any;
     private name: string;
     public useRewardAddress: boolean;
-    constructor (cip30: any, name: string, useRewardAddress: boolean) {
+    public useTestnet: boolean;
+    constructor (cip30: any, name: string, useRewardAddress: boolean, useTestnet: boolean) {
         this.cip30 = cip30;
         this.name = name;
         this.useRewardAddress = useRewardAddress;
+        this.useTestnet = useTestnet;
     }
 
     async getHexAddresses() {
@@ -50,12 +52,13 @@ implements ConnectedWallet {
         let addrs = this.useRewardAddress ?
                         await (this.cip30.getRewardAddresses()) :
                         await paymentAddresses();
+        addrs
         return addrs;
     }
 
     async getAddresses() {
         const hexAddrs = await this.getHexAddresses();
-        let decodeFromHex = (hex) => {return  decodeAddress(hexToBytes(hex))}
+        let decodeFromHex = (hex) => {return decodeAddress(hexToBytes(hex))}
         return hexAddrs.map(decodeFromHex);
     }
 
@@ -67,7 +70,18 @@ implements ConnectedWallet {
         }
 
         const address = addresses[0];
-        const bechAddress = decodeAddress(hexToBytes(address));
+        const addressBytes = hexToBytes(address);
+        const bechAddress = decodeAddress(addressBytes);
+
+        if (this.useTestnet && isMainnet(addressBytes)) {
+            console.error("Address you are trying to use belongs to Cardano mainnet: " + bechAddress);
+            throw "Please use a Cardano testnet address.";
+        }
+
+        if (!this.useTestnet && !isMainnet(addressBytes)) {
+            console.error("Address you are trying to use belongs to Cardano testnet: " + bechAddress);
+            throw "Please use a Cardano mainnet address.";
+        }
 
         data = bechAddress + '\n' + data;
 
@@ -87,8 +101,10 @@ implements ConnectedWallet {
 export class AvailableCip30 implements AvailableWallet<ConnectedCip30> {
     public tag: string;
     public useRewardAddress: boolean;
-    constructor (tag: Cip30WalletTag, useRewardAddress?: boolean) {
+    public useTestnet: boolean;
+    constructor (tag: Cip30WalletTag, useRewardAddress?: boolean, useTestnet ?: boolean) {
         this.useRewardAddress = useRewardAddress || false;
+        this.useTestnet = useTestnet || false;
 
         if (typeof (window as any).cardano === 'object' &&
             typeof (window as any).cardano[tag] === 'object' &&
@@ -116,7 +132,7 @@ export class AvailableCip30 implements AvailableWallet<ConnectedCip30> {
         // We assume that once available API can't disappear from `window`.
         // Is it true?
         const cip30 = await (window as any).cardano[this.tag].enable();
-        return new ConnectedCip30(cip30, this.tag, this.useRewardAddress);
+        return new ConnectedCip30(cip30, this.tag, this.useRewardAddress, this.useTestnet);
     }
 }
 

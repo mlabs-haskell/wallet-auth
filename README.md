@@ -17,7 +17,10 @@ it only handles data signatures by interacting with wallets.
 # Notes
 
 * As an additional security measure, we require that signed data always starts with the address used and a new line character.
-* For Cardano wallets either a stake key or a payment key can be used.
+* For Cardano wallets either a stake key or a payment key can be used
+(see `AvailableCip30` constructor).
+* Only mainnet addresses are allowed by default
+(pass the proper option to `AvailableCip30` constructor if you want to use testnet)
 
 ## Tests
 

@@ -37,3 +37,10 @@ export function decodeAddress(address: Uint8Array): string {
 
     return bech32.encode(prefix, words, 700);
 }
+
+export function isMainnet(address : Uint8Array): boolean {
+    if (!(address instanceof Uint8Array)) {
+        throw "Incorrect address CBOR";
+    }
+    return (address[0] & 0b00001111) == 0b0001;
+}
