@@ -108,8 +108,12 @@ export class AvailableCip30 implements AvailableWallet<ConnectedCip30> {
 
         if (typeof (window as any).cardano === 'object' &&
             typeof (window as any).cardano[tag] === 'object' &&
-            typeof (window as any).cardano[tag].enable === 'function') {
-            this.tag = tag;
+            typeof (window as any).cardano[tag].enable === 'function' &&
+            // This prevents naugthy NuFi from pretenting being Eternl and Flint.
+            // Might fail in the future for new-coming wallets.
+            ((window as any).cardano[tag].name as string)
+                .toLowerCase().includes(tag.toLowerCase())) {
+                    this.tag = tag;
         } else {
             setTimeout(() => {
                 if (typeof (window as any).cardano === 'object' &&
