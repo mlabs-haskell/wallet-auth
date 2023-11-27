@@ -102,18 +102,25 @@ export class AvailableCip30 implements AvailableWallet<ConnectedCip30> {
     public tag: string;
     public useRewardAddress: boolean;
     public useTestnet: boolean;
-    constructor (tag: Cip30WalletTag, useRewardAddress?: boolean, useTestnet ?: boolean) {
+    constructor (tag: Cip30WalletTag, name?: string, useRewardAddress?: boolean, useTestnet ?: boolean) {
         this.useRewardAddress = useRewardAddress || false;
         this.useTestnet = useTestnet || false;
 
         if (typeof (window as any).cardano === 'object' &&
             typeof (window as any).cardano[tag] === 'object' &&
-            typeof (window as any).cardano[tag].enable === 'function' &&
-            // This prevents naugthy NuFi from pretenting being Eternl and Flint.
-            // Might fail in the future for new-coming wallets.
-            ((window as any).cardano[tag].name as string)
-                .toLowerCase().includes(tag.toLowerCase())) {
+            typeof (window as any).cardano[tag].enable === 'function') {
+                // This prevents naugthy NuFi from pretenting being Eternl and Flint.
+                // Might fail in the future for new-coming wallets.
+                if (name == null || (window as any).cardano[tag].name as string == name) {
                     this.tag = tag;
+                } else {
+                    console.error(
+                        "Wallet " + tag +
+                            " was found, but won't be used bacuase of the name mismatch: " +
+                            "expected: " + name + ", was: " + (window as any).cardano[tag].name
+                    );
+                    throw "Wallet not available: " + tag + " with name: " + name;
+                }
         } else {
             setTimeout(() => {
                 if (typeof (window as any).cardano === 'object' &&

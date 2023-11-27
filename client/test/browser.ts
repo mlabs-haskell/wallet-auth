@@ -82,23 +82,22 @@ for (const key in cip30knownWallets) {
     document.body.appendChild(document.createElement('br'));
 
     mkTest(key +', stake address, mainnet', async () => {
-        const av = new AvailableCip30(value, true);
+        const av = new AvailableCip30(value, null, true);
         return cip30handler(av);
     });
     document.body.appendChild(document.createElement('br'));
 
     mkTest(key +', base address, testnet', async () => {
-        const av = new AvailableCip30(value, false, true);
+        const av = new AvailableCip30(value, null, false, true);
         return cip30handler(av);
     });
     document.body.appendChild(document.createElement('br'));
 
     mkTest(key +', stake address, testnet', async () => {
-        const av = new AvailableCip30(value, true, true);
+        const av = new AvailableCip30(value, null, true, true);
         return cip30handler(av);
     });
     document.body.appendChild(document.createElement('br'));
-
 }
 
 document.body.appendChild(textarea);
